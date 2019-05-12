@@ -19,25 +19,32 @@ namespace TechSupport.Controllers.Api
             _questionsRepository = questionsRepository;
         }
 
-        [HttpPost]
-        [Route("[Action]")]
-        public IActionResult Add(Question question, IFormFile file)
+        [HttpGet]
+        [Route("[action]")]
+        public JsonResult Add()
         {
-            string filePath = Path.GetTempFileName();
+            return Json("Test");
+        }
+
+        [HttpPost]
+        [Route("[action]")]
+        public JsonResult Add(Question question)
+        {
+            /*string filePath = Path.GetTempFileName();
             FileStream stream; 
             using (stream = new FileStream(filePath, FileMode.Create))
             {
                 file.CopyTo(stream);
-            }
+            }*/
 
             try
             {
-                Question entry = _questionsRepository.AddQuestion(question, stream);
+                Question entry = _questionsRepository.AddQuestion(question, null);
                 
-                stream.Close();
-                System.IO.File.Delete(filePath); //Remove useless temp file
+                //stream.Close();
+                //System.IO.File.Delete(filePath); //Remove useless temp file
                 
-                return Ok(entry);
+                return Json(entry);
             }
             catch(Exception e)
             {

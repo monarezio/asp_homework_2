@@ -124,11 +124,7 @@ class TechSupportForm extends React.Component<IProps, IState> {
     handleFormSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         
-        let formData = new FormData(document.getElementsByTagName('form')[0]);
-        
-        console.log(formData);
-        
-        this._httpRequest.sendPost('/question/add', formData, true)
+        this._httpRequest.sendPost('/question/add',  this.state.question, false)
     };
 
     render() {

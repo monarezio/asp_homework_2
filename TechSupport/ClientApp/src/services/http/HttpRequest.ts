@@ -20,7 +20,7 @@ class HttpRequest {
             url: url,
             method: method_type,
             withCredentials: true,
-            data: body,
+            data: qs.stringify(body),
             params: query,
             headers: headers
         });

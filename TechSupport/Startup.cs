@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TechSupportData;
 using TechSupportData.Repositories.Products;
 using TechSupportData.Repositories.ProductTypes;
+using TechSupportData.Repositories.Questions;
 
 namespace TechSupport
 {
@@ -32,6 +33,7 @@ namespace TechSupport
             
             services.AddScoped<IProductTypesRepository, ProductTypesRepository>();
             services.AddScoped<IProductsRepository, ProductsRepository>();
+            services.AddScoped<IQuestionsRepository, QuestionsRepository>();
             
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -57,6 +59,8 @@ namespace TechSupport
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
+            
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

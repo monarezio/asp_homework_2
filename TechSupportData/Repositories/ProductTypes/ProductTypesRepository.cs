@@ -14,7 +14,7 @@ namespace TechSupportData.Repositories.ProductTypes
             _dbContext = dbContext;
         }
 
-        public IList<Models.ProductType> GetAllProductTypes()
+        public IList<ProductType> GetAllProductTypes()
         {
             return _dbContext.ProductTypes.ToList();
         }

@@ -1,15 +1,18 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TechSupport.Hubs;
 using TechSupportData;
 using TechSupportData.Repositories.Products;
 using TechSupportData.Repositories.ProductTypes;
 using TechSupportData.Repositories.Questions;
+using TechSupportData.Repositories.Resolutions;
 
 namespace TechSupport
 {
@@ -34,8 +37,10 @@ namespace TechSupport
             services.AddScoped<IProductTypesRepository, ProductTypesRepository>();
             services.AddScoped<IProductsRepository, ProductsRepository>();
             services.AddScoped<IQuestionsRepository, QuestionsRepository>();
+            services.AddScoped<IResolutionRepository, ResolutionRepository>();
             
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddSignalR();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });
@@ -44,6 +49,13 @@ namespace TechSupport
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors(builder => {
+                builder.AllowAnyMethod()
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
+            });
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -56,17 +68,18 @@ namespace TechSupport
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ServeUnknownFileTypes = true
+            });
             app.UseSpaStaticFiles();
 
-            
-            
-            app.UseMvc(routes =>
+            app.UseSignalR(routes =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
+                routes.MapHub<QuestionHub>("/questionHub");
             });
+
+            app.UseMvc();
 
             app.UseSpa(spa =>
             {

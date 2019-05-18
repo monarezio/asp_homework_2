@@ -1,0 +1,40 @@
+@page "{questionId}"
+@using TechSupportData.Models
+@model TechSupport.Pages.Answer
+
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Question Answer";
+}
+
+<form method="post" enctype="multipart/form-data">
+    <input type="hidden" class="d-none" name="QuestionId" value="@Model.QuestionId"/>
+    <div class="form-group">
+        <label for="product">Product</label>
+        <input class="form-control" id="product" type="text" value="@Model.Question.Product.Name" readonly/>
+    </div>
+    <div class="form-group">
+        <label for="email">From</label>
+        <input class="form-control" id="email" type="text" value="@Model.Question.Email" readonly/>
+    </div>
+    <div class="form-group">
+        <label for="body">Body</label>
+        <textarea class="form-control" rows="3" id="body" type="text" readonly>@Model.Question.Body</textarea>
+    </div>
+    <div class="form-group">
+        <label for="answer">Answer*</label>
+        <textarea class="form-control" rows="3" id="answer" type="text" name="Answer" required></textarea>
+    </div>
+    <div class="form-group">
+        <input id="file" type="file" name="file"/>
+    </div>
+    @if (Model.Question.AttachmentFileName != null)
+    {
+        <div>
+            <a target="_blank" href="/resources/questions/attachments/@Model.Question.AttachmentFileName">Attachement to download</a>   
+        </div>
+    }
+    <div class="text-right">
+        <input type="submit" class="btn btn-primary" value="Answer"/>
+    </div>
+</form>

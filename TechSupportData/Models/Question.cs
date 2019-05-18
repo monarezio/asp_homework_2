@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TechSupportData.Models.Attributes;
 
 namespace TechSupportData.Models
@@ -9,7 +10,7 @@ namespace TechSupportData.Models
     {
         [Key]
         [Required]
-        public int QeustionId { get; set; }
+        public int QuestionId { get; set; }
 
         [Required]
         public DateTime DateTimeCreated { get; set; } = DateTime.Now;
@@ -22,9 +23,8 @@ namespace TechSupportData.Models
         [Required]
         [ClientEmail]
         public string Email { get; set; }
-
-        [Required]
-        public bool IsAttachment { get; set; }
+        
+        public string AttachmentFileName { get; set; }
 
         public Resolution Resolution { get; set; }
 

@@ -251,8 +251,10 @@ namespace TechSupportData.Migrations
 
             modelBuilder.Entity("TechSupportData.Models.Question", b =>
                 {
-                    b.Property<int>("QeustionId")
+                    b.Property<int>("QuestionId")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AttachmentFileName");
 
                     b.Property<string>("Body")
                         .IsRequired()
@@ -263,13 +265,12 @@ namespace TechSupportData.Migrations
                     b.Property<string>("Email")
                         .IsRequired();
 
-                    b.Property<bool>("IsAttachment")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(false);
-
                     b.Property<int>("ProductId");
 
-                    b.HasKey("QeustionId");
+                    b.HasKey("QuestionId");
+
+                    b.HasIndex("AttachmentFileName")
+                        .IsUnique();
 
                     b.HasIndex("ProductId");
 
@@ -281,13 +282,18 @@ namespace TechSupportData.Migrations
                     b.Property<int>("ResultionId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Answer")
+                        .IsRequired();
+
+                    b.Property<string>("AttachmentFileName");
+
                     b.Property<DateTime>("DateTimeResolved");
 
-                    b.Property<int>("QeustionId");
+                    b.Property<int>("QuestionId");
 
                     b.HasKey("ResultionId");
 
-                    b.HasIndex("QeustionId")
+                    b.HasIndex("QuestionId")
                         .IsUnique();
 
                     b.ToTable("Resolutions");
@@ -313,7 +319,7 @@ namespace TechSupportData.Migrations
                 {
                     b.HasOne("TechSupportData.Models.Question", "Question")
                         .WithOne("Resolution")
-                        .HasForeignKey("TechSupportData.Models.Resolution", "QeustionId")
+                        .HasForeignKey("TechSupportData.Models.Resolution", "QuestionId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

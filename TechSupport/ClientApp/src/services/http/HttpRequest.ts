@@ -14,15 +14,14 @@ class HttpRequest {
         return instance;
     }
 
-    send<T>(url: string, method_type: HttpRequestType, body: Object, query: Object, headers: Object = {}) {
+    send<T>(url: string, method_type: HttpRequestType, body: Object, query: Object) {
         return axios.request<T>({
             baseURL: api_settings.getUrl(),
             url: url,
             method: method_type,
             withCredentials: true,
-            data: qs.stringify(body),
+            data: body,
             params: query,
-            headers: headers
         });
     }
 
@@ -30,13 +29,8 @@ class HttpRequest {
         return this.send<T>(url, HttpRequestType.get, {}, query);
     }
 
-    sendPost<T>(url: string, body: Object = {}, is_multipart: Boolean = false) {
-        if (!is_multipart)
-            return this.send<T>(url, HttpRequestType.post, body, {});
-        else
-            return this.send<T>(url, HttpRequestType.post, body, {}, {
-                'Content-Type': 'multipart/form-data'
-            });
+    sendPost<T>(url: string, body: Object = {}) {
+        return this.send<T>(url, HttpRequestType.post, body, {});
     }
 
     sendDelete<T>(url: string, body: Object = {}, query: Object = {}) {

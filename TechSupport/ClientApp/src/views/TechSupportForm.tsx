@@ -3,12 +3,14 @@ import Question from "../models/Question";
 import HttpRequest from "../services/http/HttpRequest";
 
 import Spinner from '../components/Spinner';
+import Message from '../components/Message'
 import ProductType from "../models/ProductType";
 import Product from "../models/Product";
 
 interface IState {
     question: Question
-    is_loading: Boolean
+    is_loading: Boolean,
+    is_finished: Boolean,
     product_types_options: Array<ProductType>,
     products_options: Array<Product>
 }
@@ -25,6 +27,7 @@ class TechSupportForm extends React.Component<IProps, IState> {
         this.state = {
             question: new Question(),
             is_loading: true,
+            is_finished: false,
             product_types_options: [],
             products_options: []
         };
@@ -42,7 +45,7 @@ class TechSupportForm extends React.Component<IProps, IState> {
                 //TODO: throw error
             });
     }
-
+    //TODO: Cleanup? 
     handelProductTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         let product_type_id = parseInt(e.target.value);
 
@@ -51,7 +54,7 @@ class TechSupportForm extends React.Component<IProps, IState> {
                 is_loading: true,
                 question: {
                     ...this.state.question,
-                    product_type_id: product_type_id,
+                    productTypeId: product_type_id,
                 }
             });
 
@@ -71,10 +74,10 @@ class TechSupportForm extends React.Component<IProps, IState> {
                 products_options: [],
                 question: {
                     ...this.state.question,
-                    product_type_id: product_type_id,
-                    product_id: 0,
+                    productTypeId: product_type_id,
+                    productId: 0,
                     email: "",
-                    text: ""
+                    body: ""
                 }
             });
         }
@@ -85,7 +88,7 @@ class TechSupportForm extends React.Component<IProps, IState> {
         this.setState({
             question: {
                 ...this.state.question,
-                product_id: product_id,
+                productId: product_id,
             }
         });
 
@@ -94,9 +97,9 @@ class TechSupportForm extends React.Component<IProps, IState> {
             this.setState({
                 question: {
                     ...this.state.question,
-                    product_id: product_id,
+                    productId: product_id,
                     email: "",
-                    text: ""
+                    body: ""
                     //TODO: Reset file
                 }
             });
@@ -116,7 +119,7 @@ class TechSupportForm extends React.Component<IProps, IState> {
         this.setState({
             question: {
                 ...this.state.question,
-                text: e.target.value
+                body: e.target.value
             }
         })
     };
@@ -124,12 +127,44 @@ class TechSupportForm extends React.Component<IProps, IState> {
     handleFormSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         
-        this._httpRequest.sendPost('/question/add',  this.state.question, false)
+        let formData: FormData = new FormData();
+
+        for (let key in this.state.question) {
+            formData.append(key, (this.state.question as any)[key])
+        }
+        
+        let fileInput: HTMLInputElement = document.getElementById('file') as HTMLInputElement;
+        
+        if(fileInput.files != null && fileInput.files.length != 0)
+            formData.append("file", fileInput.files[0]);
+        
+        this.setState({
+            is_loading: true
+        });
+        this._httpRequest.sendPost('/question/add',  formData)
+            .then(() => {
+                this.setState({
+                    is_finished: true
+                })
+            })
+            .catch((ex) => {
+                let errors: String = "Errors: \n";
+                for(let key in ex.response.data.errors) {
+                    errors += ex.response.data.errors[key] + "\n";
+                }
+                alert(errors) //TODO: Maybe use bootstrap modal?
+            })
+            .finally(() => {
+                this.setState({
+                    is_loading: false
+                });
+            })
     };
 
     render() {
         return <form>
             <Spinner is_loading={this.state.is_loading}/>
+            <Message is_showing={this.state.is_finished}/>
             <div className="form-group row">
                 <label htmlFor="product_type" className="col-sm-2 col-form-label">Product Type</label>
                 <div className="col-sm-10">
@@ -140,7 +175,7 @@ class TechSupportForm extends React.Component<IProps, IState> {
                     </select>
                 </div>
             </div>
-            <div className={"form-group row" + (this.state.question.product_type_id === 0 ? " d-none" : "")}>
+            <div className={"form-group row" + (this.state.question.productTypeId === 0 ? " d-none" : "")}>
                 <label htmlFor="product" className="col-sm-2 col-form-label">Product</label>
                 <div className="col-sm-10">
                     <select onChange={this.handleProductChange} className="custom-select" id="product">
@@ -151,7 +186,7 @@ class TechSupportForm extends React.Component<IProps, IState> {
                 </div>
             </div>
             <div
-                className={this.state.question.product_id === 0 || this.state.question.product_type_id === 0 ? "d-none" : ""}>
+                className={this.state.question.productId === 0 || this.state.question.productTypeId === 0 ? "d-none" : ""}>
                 <div className="form-group row">
                     <label htmlFor="email" className="col-sm-2 col-form-label">Email*</label>
                     <div className="col-sm-10">
@@ -163,7 +198,7 @@ class TechSupportForm extends React.Component<IProps, IState> {
                     <label htmlFor="body" className="col-sm-2 col-form-label">Text*</label>
                     <div className="col-sm-10">
                         <textarea onChange={this.handleTextChange} id="body" required className="form-control"
-                                  value={this.state.question.text}/>
+                                  value={this.state.question.body}/>
                     </div>
                 </div>
                 <div className="form-group row">

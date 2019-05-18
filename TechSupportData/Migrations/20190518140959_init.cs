@@ -45,17 +45,17 @@ namespace TechSupportData.Migrations
                 name: "Questions",
                 columns: table => new
                 {
-                    QeustionId = table.Column<int>(nullable: false)
+                    QuestionId = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     DateTimeCreated = table.Column<DateTime>(nullable: false),
                     Body = table.Column<string>(maxLength: 500, nullable: false),
                     Email = table.Column<string>(nullable: false),
-                    IsAttachment = table.Column<bool>(nullable: false, defaultValue: false),
+                    AttachmentFileName = table.Column<string>(nullable: true),
                     ProductId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Questions", x => x.QeustionId);
+                    table.PrimaryKey("PK_Questions", x => x.QuestionId);
                     table.ForeignKey(
                         name: "FK_Questions_Products_ProductId",
                         column: x => x.ProductId,
@@ -71,16 +71,18 @@ namespace TechSupportData.Migrations
                     ResultionId = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     DateTimeResolved = table.Column<DateTime>(nullable: false),
-                    QeustionId = table.Column<int>(nullable: false)
+                    QuestionId = table.Column<int>(nullable: false),
+                    AttachmentFileName = table.Column<string>(nullable: true),
+                    Answer = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Resolutions", x => x.ResultionId);
                     table.ForeignKey(
-                        name: "FK_Resolutions_Questions_QeustionId",
-                        column: x => x.QeustionId,
+                        name: "FK_Resolutions_Questions_QuestionId",
+                        column: x => x.QuestionId,
                         principalTable: "Questions",
-                        principalColumn: "QeustionId",
+                        principalColumn: "QuestionId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -138,14 +140,20 @@ namespace TechSupportData.Migrations
                 column: "ProductTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Questions_AttachmentFileName",
+                table: "Questions",
+                column: "AttachmentFileName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Questions_ProductId",
                 table: "Questions",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Resolutions_QeustionId",
+                name: "IX_Resolutions_QuestionId",
                 table: "Resolutions",
-                column: "QeustionId",
+                column: "QuestionId",
                 unique: true);
         }
 

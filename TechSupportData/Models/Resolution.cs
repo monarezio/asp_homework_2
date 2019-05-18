@@ -16,8 +16,14 @@ namespace TechSupportData.Models
         public DateTime DateTimeResolved { get; set; } = DateTime.Now;
         
         [Required]
-        public int QeustionId { get; set; }
-        
+        public int QuestionId { get; set; }
+
+        public string AttachmentFileName { get; set; }
+
+        [Required]
+        [MinLength(1)]
+        public string Answer { get; set; }
+
         public Question Question { get; set; }
     }
 }

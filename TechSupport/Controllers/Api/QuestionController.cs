@@ -1,8 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using TechSupport.Hubs;
+using TechSupport.Models;
 using TechSupportData.Models;
 using TechSupportData.Repositories.Questions;
 
@@ -13,45 +17,28 @@ namespace TechSupport.Controllers.Api
     public class QuestionController : Controller
     {
         private readonly IQuestionsRepository _questionsRepository;
+        private readonly IHubContext<QuestionHub> _hubContext;
 
-        public QuestionController(IQuestionsRepository questionsRepository)
+        public QuestionController(IQuestionsRepository questionsRepository, IHubContext<QuestionHub> hubContext)
         {
             _questionsRepository = questionsRepository;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
         [Route("[action]")]
-        public JsonResult Add()
+        public JsonResult AddPost()
         {
             return Json("Test");
         }
 
         [HttpPost]
         [Route("[action]")]
-        public JsonResult Add(Question question)
+        public JsonResult Add([FromForm] QuestionViewModel question, IFormFile file)
         {
-            /*string filePath = Path.GetTempFileName();
-            FileStream stream; 
-            using (stream = new FileStream(filePath, FileMode.Create))
-            {
-                file.CopyTo(stream);
-            }*/
-
-            try
-            {
-                Question entry = _questionsRepository.AddQuestion(question, null);
-                
-                //stream.Close();
-                //System.IO.File.Delete(filePath); //Remove useless temp file
-                
-                return Json(entry);
-            }
-            catch(Exception e)
-            {
-                //TODO: Do something interesting
-                throw e;
-            }
+            Question entry = _questionsRepository.AddQuestion(question.ToQuestion(), file);
+            _hubContext.Clients.All.SendAsync("Increment");
+            return Json(question);
         }
-
     }
 }

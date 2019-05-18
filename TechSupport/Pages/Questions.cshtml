@@ -1,0 +1,33 @@
+@page
+@using TechSupport.Models
+@model TechSupport.Pages.Questions
+
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Questions List";
+}
+
+<h3>Unaswered questions: <span id="question-amount">@Model.QuestionCount</span></h3>
+<table class="table">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col" class="font-weight-normal">#</th>
+        <th scope="col" class="font-weight-normal">From</th>
+        <th scope="col" class="font-weight-normal">Answer</th>
+    </tr>
+    </thead>
+    <tbody class="font-weight-lighter">
+    @foreach (QuestionViewModel question in Model.QuestionsList)
+    {
+        <tr>
+            <td>@question.QuestionId</td>
+            <td>@question.Email</td>
+            <td>
+                <a href="/answer/@question.QuestionId" class="text-primary">
+                    <i class="fas fa-arrow-alt-circle-right"></i>
+                </a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

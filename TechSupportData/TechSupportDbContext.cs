@@ -20,9 +20,9 @@ namespace TechSupportData
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Question>()
-                .Property(i => i.IsAttachment)
-                .HasDefaultValue(false);
-
+                .HasIndex(i => i.AttachmentFileName)
+                .IsUnique();
+            
             //Adding test data to the db.
             ProductType[] productTypes =
             {
@@ -230,7 +230,6 @@ namespace TechSupportData
                 },
             };
             modelBuilder.Entity<Product>().HasData(products);
-
         }
     }
 }

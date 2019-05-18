@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="~/webpack/dist/bundle.css"/>
+    <title>@ViewData["Title"] - TechSupport</title>
+</head>
+<body>
+<div id="body">
+    <header>
+
+    </header>
+    <main class="custom-container">
+        <h2>@ViewBag.Title</h2>
+        <section>
+            @RenderBody()
+        </section>
+    </main>
+    <footer>
+        <div>
+            &copy; Samuel Kodytek 2019
+        </div>
+    </footer>
+</div>
+<script src="~/webpack/dist/bundle.js" asp-append-version="true"></script>
+</body>
+</html>

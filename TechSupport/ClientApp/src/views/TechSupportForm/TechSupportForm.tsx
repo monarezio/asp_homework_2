@@ -1,11 +1,11 @@
 import * as React from "react";
-import Question from "../models/Question";
-import HttpRequest from "../services/http/HttpRequest";
+import Question from "../../models/Question";
+import HttpRequest from "../../services/http/HttpRequest";
 
-import Spinner from '../components/Spinner';
-import Message from '../components/Message'
-import ProductType from "../models/ProductType";
-import Product from "../models/Product";
+import Spinner from '../../components/Spinner';
+import Message from '../../components/Message'
+import ProductType from "../../models/ProductType";
+import Product from "../../models/Product";
 
 interface IState {
     question: Question
@@ -45,7 +45,7 @@ class TechSupportForm extends React.Component<IProps, IState> {
                 //TODO: throw error
             });
     }
-    //TODO: Cleanup? 
+    
     handelProductTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         let product_type_id = parseInt(e.target.value);
 
@@ -100,7 +100,6 @@ class TechSupportForm extends React.Component<IProps, IState> {
                     productId: product_id,
                     email: "",
                     body: ""
-                    //TODO: Reset file
                 }
             });
         }
@@ -152,7 +151,7 @@ class TechSupportForm extends React.Component<IProps, IState> {
                 for(let key in ex.response.data.errors) {
                     errors += ex.response.data.errors[key] + "\n";
                 }
-                alert(errors) //TODO: Maybe use bootstrap modal?
+                alert(errors)
             })
             .finally(() => {
                 this.setState({

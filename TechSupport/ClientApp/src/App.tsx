@@ -1,6 +1,6 @@
 import React from 'react';
 
-import TechSupportForm from './views/TechSupportForm';
+import TechSupportForm from './views/TechSupportForm/TechSupportForm';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

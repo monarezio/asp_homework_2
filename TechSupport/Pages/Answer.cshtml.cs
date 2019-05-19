@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -38,9 +39,9 @@ namespace TechSupport.Pages
             return Page();
         }
 
-        public IActionResult OnPost(Resolution resolution, IFormFile file)
+        public IActionResult OnPost([FromForm][Required]Resolution resolution, IFormFile file)
         {
-            if (string.IsNullOrEmpty(resolution.Answer))
+            if (!ModelState.IsValid)
             {
                 return OnGet();
             }

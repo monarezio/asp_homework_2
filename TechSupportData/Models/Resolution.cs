@@ -22,6 +22,7 @@ namespace TechSupportData.Models
 
         [Required]
         [MinLength(1)]
+        [MaxLength(500)]
         public string Answer { get; set; }
 
         public Question Question { get; set; }

@@ -46,7 +46,7 @@
       <TypeScriptCompile Include="ClientApp\src\models\Question.ts" />
       <TypeScriptCompile Include="ClientApp\src\services\http\HttpRequest.ts" />
       <TypeScriptCompile Include="ClientApp\src\services\http\HttpRequestType.ts" />
-      <TypeScriptCompile Include="ClientApp\src\views\TechSupportForm.tsx" />
+      <TypeScriptCompile Include="ClientApp\src\views\TechSupportForm\TechSupportForm.tsx" />
     </ItemGroup>
 
     <ItemGroup>
